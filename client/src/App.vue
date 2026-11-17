@@ -269,12 +269,12 @@ body {
 
 .app-shell {
   display: grid;
-  grid-template-columns: var(--sidebar-width) 1fr;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr); /* minmax(0) lets wide tables shrink/scroll instead of widening the page */
   min-height: 100vh;
   transition: grid-template-columns var(--transition-base);
 }
 .app-shell.sidebar-collapsed {
-  grid-template-columns: var(--sidebar-width-collapsed) 1fr;
+  grid-template-columns: var(--sidebar-width-collapsed) minmax(0, 1fr);
 }
 
 /* Sidebar sticks while the document scrolls: one scrollbar, no nested scrolling. */
@@ -535,6 +535,19 @@ td {
   border-top: 1px solid #f1f5f9;
   color: #334155;
   font-size: 0.875rem;
+  /* Keep IDs/SKUs/dates/numbers on one line; a too-wide table scrolls inside
+     .table-container. Free-text columns opt back in via .wrap-cell or per-view rules. */
+  white-space: nowrap;
+}
+
+td.wrap-cell {
+  white-space: normal;
+  min-width: 160px;
+}
+
+table .btn,
+table button {
+  white-space: nowrap;
 }
 
 tbody tr {
@@ -547,6 +560,7 @@ tbody tr:hover {
 
 .badge {
   display: inline-block;
+  white-space: nowrap;
   padding: var(--space-1) var(--space-3);
   border-radius: var(--radius-sm);
   font-size: 0.75rem;

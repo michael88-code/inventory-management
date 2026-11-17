@@ -87,7 +87,7 @@
             <tbody>
               <tr v-for="forecast in forecasts" :key="forecast.id">
                 <td><strong>{{ forecast.item_sku }}</strong></td>
-                <td>{{ forecast.item_name }}</td>
+                <td class="wrap-cell">{{ forecast.item_name }}</td>
                 <td>{{ forecast.current_demand }}</td>
                 <td><strong>{{ forecast.forecasted_demand }}</strong></td>
                 <td>

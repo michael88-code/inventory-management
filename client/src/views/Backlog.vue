@@ -54,7 +54,7 @@
               <tr v-for="item in backlogItems" :key="item.id">
                 <td><strong>{{ item.order_id }}</strong></td>
                 <td><strong>{{ item.item_sku }}</strong></td>
-                <td>{{ item.item_name }}</td>
+                <td class="wrap-cell">{{ item.item_name }}</td>
                 <td>{{ item.quantity_needed }}</td>
                 <td>{{ item.quantity_available }}</td>
                 <td>

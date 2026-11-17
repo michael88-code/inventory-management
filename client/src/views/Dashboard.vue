@@ -190,7 +190,7 @@
                 >
                   <td @click="showBacklogDetail(item)" style="cursor: pointer;"><strong>{{ item.order_id }}</strong></td>
                   <td @click="showBacklogDetail(item)" style="cursor: pointer;"><strong>{{ item.item_sku }}</strong></td>
-                  <td @click="showBacklogDetail(item)" style="cursor: pointer;">{{ translateProductName(item.item_name) }}</td>
+                  <td class="wrap-cell" @click="showBacklogDetail(item)" style="cursor: pointer;">{{ translateProductName(item.item_name) }}</td>
                   <td @click="showBacklogDetail(item)" style="cursor: pointer;">{{ item.quantity_needed }}</td>
                   <td @click="showBacklogDetail(item)" style="cursor: pointer;">{{ item.quantity_available }}</td>
                   <td @click="showBacklogDetail(item)" style="cursor: pointer;">
@@ -255,7 +255,7 @@
                   class="clickable-row"
                   @click="showProductDetail(item)"
                 >
-                  <td><strong>{{ translateProductName(item.name) }}</strong></td>
+                  <td class="wrap-cell"><strong>{{ translateProductName(item.name) }}</strong></td>
                   <td>{{ item.sku }}</td>
                   <td>{{ translateCategory(item.category) }}</td>
                   <td>{{ item.unitsOrdered }}</td>
@@ -753,11 +753,26 @@ export default {
 
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  /* Five cards on one row; minmax(0) stops long values from forcing columns wider. */
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 1rem;
 }
 
+/* Fallbacks avoid a 4+1 orphan: 5 -> 3+2 -> 2+2+1 -> 1 */
+@media (max-width: 1099px) {
+  .kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 799px) {
+  .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 479px) {
+  .kpi-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
 .kpi-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 10px;
@@ -777,7 +792,10 @@ export default {
 }
 
 .kpi-value {
-  font-size: 2rem;
+  /* Stepped down from 2rem so "$31,166,853" fits a ~210px card */
+  font-size: 1.5rem;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
   font-weight: 700;
   color: #0f172a;
   margin-bottom: 0.5rem;
@@ -791,6 +809,7 @@ export default {
 }
 
 .kpi-progress-bar {
+  margin-top: auto; /* pin bars to card bottom so rows stay aligned when labels wrap */
   width: 100%;
   height: 6px;
   background: #f1f5f9;

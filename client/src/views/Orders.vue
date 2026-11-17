@@ -97,7 +97,7 @@
             <tbody>
               <tr v-for="order in orders" :key="order.id">
                 <td class="col-order-number"><strong>{{ order.order_number }}</strong></td>
-                <td class="col-customer">{{ translateCustomerName(order.customer) }}</td>
+                <td class="col-customer wrap-cell">{{ translateCustomerName(order.customer) }}</td>
                 <td class="col-items">
                   <details class="items-details">
                     <summary class="items-summary">
