@@ -56,7 +56,7 @@
                 @click="showItemDetail(item)"
               >
                 <td><strong>{{ item.sku }}</strong></td>
-                <td>{{ translateProductName(item.name) }}</td>
+                <td class="wrap-cell">{{ translateProductName(item.name) }}</td>
                 <td>{{ translateCategory(item.category) }}</td>
                 <td><strong>{{ item.quantity_on_hand }}</strong></td>
                 <td>{{ item.reorder_point }}</td>

@@ -75,7 +75,7 @@
                 :class="{ unfunded: row.quantity === 0 }"
               >
                 <td><strong>{{ row.sku }}</strong></td>
-                <td>{{ translateProductName(row.name) }}</td>
+                <td class="wrap-cell">{{ translateProductName(row.name) }}</td>
                 <td><span :class="['badge', row.trend]">{{ t(`trends.${row.trend}`) }}</span></td>
                 <td class="num">{{ row.gap.toLocaleString() }}</td>
                 <td class="num">
