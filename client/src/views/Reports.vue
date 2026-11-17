@@ -322,11 +322,16 @@ export default {
 }
 
 .card {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  /* Normalized to the shared card tokens so Reports matches every other page */
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  margin-bottom: var(--space-5);
+  box-shadow: var(--shadow-sm);
+  min-width: 0;
+  /* wide tables/charts scroll inside the card instead of widening the page */
+  overflow-x: auto;
 }
 
 .card-header {
@@ -346,16 +351,20 @@ export default {
 }
 
 .reports-table th {
-  background: #f8fafc;
-  padding: 0.75rem;
+  background: var(--color-surface-muted);
+  padding: var(--space-3);
   text-align: left;
   font-weight: 600;
-  color: #64748b;
-  border-bottom: 2px solid #e2e8f0;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .reports-table td {
-  padding: 0.75rem;
+  padding: var(--space-3);
+  font-variant-numeric: tabular-nums;
   border-bottom: 1px solid #e2e8f0;
 }
 
@@ -421,11 +430,12 @@ export default {
 }
 
 .stat-card {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border-left: 4px solid #3b82f6;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid var(--color-accent);
 }
 
 .stat-label {

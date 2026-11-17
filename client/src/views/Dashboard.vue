@@ -731,7 +731,6 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
 }
 
 .header-meta {
@@ -812,7 +811,7 @@ export default {
 
 .charts-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.25rem;
   margin-bottom: 1.5rem;
 }
@@ -860,7 +859,7 @@ export default {
 /* Order Health Dashboard Styles */
 .order-health-container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 1.5rem;
   align-items: center;
   padding: 1rem;
@@ -897,7 +896,7 @@ export default {
 
 .donut-legend-compact {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.625rem 1.25rem;
 }
 
