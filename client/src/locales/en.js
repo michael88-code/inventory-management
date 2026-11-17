@@ -6,6 +6,7 @@ export default {
     orders: 'Orders',
     finance: 'Finance',
     demandForecast: 'Demand Forecast',
+    restocking: 'Restocking',
     companyName: 'Catalyst Components',
     subtitle: 'Inventory Management System'
   },
@@ -106,6 +107,12 @@ export default {
     title: 'Orders',
     description: 'View and manage customer orders',
     allOrders: 'All Orders',
+    submittedOrders: 'Submitted Restocking Orders',
+    noSubmittedOrders: 'No restocking orders yet. Place one from the Restocking tab.',
+    submittedDate: 'Submitted',
+    leadTime: 'Lead Time',
+    leadTimeDays: '{days} days',
+    totalCost: 'Total Cost',
     totalOrders: 'Total Orders',
     totalRevenue: 'Total Revenue',
     avgOrderValue: 'Avg Order Value',
@@ -168,6 +175,36 @@ export default {
   },
 
   // Demand Forecast
+  restocking: {
+    title: 'Restocking',
+    description: 'Set a budget and restock the items with the fastest-growing demand',
+    budget: 'Available Budget',
+    recommendedTotal: 'Recommended Order',
+    remaining: 'Remaining Budget',
+    leadTime: 'Est. Lead Time',
+    leadTimeDays: '{days} days',
+    recommendations: 'Recommended Items',
+    howItWorks: 'Quantities cover the gap between current and forecasted demand. Items with increasing demand are funded first, then the largest gaps.',
+    notFunded: 'Not funded',
+    partial: 'Partial',
+    noCandidates: 'No items need restocking: forecasted demand does not exceed current demand.',
+    placeOrder: 'Place Order',
+    placing: 'Placing order...',
+    nothingToOrder: 'Raise the budget to fund at least one item.',
+    orderPlaced: 'Order {number} submitted. Expected delivery in {days} days.',
+    viewInOrders: 'View in Orders',
+    orderFailed: 'Could not place the order',
+    table: {
+      sku: 'SKU',
+      item: 'Item',
+      trend: 'Trend',
+      demandGap: 'Demand Gap',
+      quantity: 'Order Qty',
+      unitCost: 'Unit Cost',
+      lineTotal: 'Line Total',
+      leadTime: 'Lead Time'
+    }
+  },
   demand: {
     title: 'Demand Forecast',
     description: 'Analyze demand trends and forecasts',
@@ -204,6 +241,7 @@ export default {
     shipped: 'Shipped',
     processing: 'Processing',
     backordered: 'Backordered',
+    submitted: 'Submitted',
     inStock: 'In Stock',
     lowStock: 'Low Stock',
     adequate: 'Adequate'

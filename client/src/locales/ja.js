@@ -6,6 +6,7 @@ export default {
     orders: '注文',
     finance: '財務',
     demandForecast: '需要予測',
+    restocking: '補充発注',
     companyName: '触媒コンポーネンツ',
     subtitle: '在庫管理システム'
   },
@@ -106,6 +107,12 @@ export default {
     title: '注文',
     description: '顧客注文の表示と管理',
     allOrders: 'すべての注文',
+    submittedOrders: '発注済みの補充注文',
+    noSubmittedOrders: '補充注文はまだありません。補充発注タブから発注できます。',
+    submittedDate: '発注日',
+    leadTime: 'リードタイム',
+    leadTimeDays: '{days}日',
+    totalCost: '合計費用',
     totalOrders: '総注文数',
     totalRevenue: '総収益',
     avgOrderValue: '平均注文額',
@@ -168,6 +175,36 @@ export default {
   },
 
   // Demand Forecast
+  restocking: {
+    title: '補充発注',
+    description: '予算を設定し、需要が最も伸びている品目を補充します',
+    budget: '利用可能な予算',
+    recommendedTotal: '推奨発注額',
+    remaining: '残りの予算',
+    leadTime: '予想リードタイム',
+    leadTimeDays: '{days}日',
+    recommendations: '推奨品目',
+    howItWorks: '数量は現在の需要と予測需要の差を補います。需要が増加している品目を優先し、次に差が大きい品目に予算を割り当てます。',
+    notFunded: '予算外',
+    partial: '一部',
+    noCandidates: '補充が必要な品目はありません。予測需要が現在の需要を上回っていません。',
+    placeOrder: '発注する',
+    placing: '発注中...',
+    nothingToOrder: '少なくとも1品目を発注できるよう予算を増やしてください。',
+    orderPlaced: '注文 {number} を発注しました。{days}日後に配達予定です。',
+    viewInOrders: '注文で確認',
+    orderFailed: '発注できませんでした',
+    table: {
+      sku: 'SKU',
+      item: '品目',
+      trend: 'トレンド',
+      demandGap: '需要差',
+      quantity: '発注数量',
+      unitCost: '単価',
+      lineTotal: '小計',
+      leadTime: 'リードタイム'
+    }
+  },
   demand: {
     title: '需要予測',
     description: '需要動向の分析と将来のニーズの予測',
@@ -204,6 +241,7 @@ export default {
     shipped: '出荷済み',
     processing: '処理中',
     backordered: 'バックオーダー',
+    submitted: '発注済み',
     inStock: '在庫あり',
     lowStock: '在庫僅少',
     adequate: '適量'
