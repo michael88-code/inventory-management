@@ -146,7 +146,21 @@ Notes:
 </template>
 ```
 
-Build `navItems` as a `computed` so labels re-evaluate when the locale changes. Derive `currentTitle` from the nav item matching `route.path` (or from `route.meta.title` if routes define it).
+Build `navItems` as a `computed` so labels re-evaluate when the locale changes. Derive `currentTitle` from `route.meta.title` if routes define it, otherwise from the matching nav item:
+
+```js
+const route = useRoute()
+const currentTitle = computed(() => {
+  const p = route.path
+  // Exact match for '/', prefix match for the rest so nested routes inherit their parent's title.
+  const item = navItems.value.find(i => (i.exact ? p === i.to : p === i.to || p.startsWith(i.to + '/')))
+  return route.meta?.title ?? item?.label ?? ''
+})
+```
+
+If the root component uses the Options API (`export default { setup() {...} }`) rather than `<script setup>`, the same code goes inside `setup()` and is returned. The composable and `AppSidebar.vue` work unchanged either way.
+
+i18n keys to add in every locale file, if the app is translated: a label for each nav item that was hard-coded before, the sidebar's `aria-label` ("Main navigation"), and the toggle's "Collapse sidebar" / "Expand sidebar".
 
 ## Shell CSS
 
@@ -155,12 +169,13 @@ Global (unscoped) so the grid applies to the root.
 ```css
 .app-shell {
   display: grid;
-  grid-template-columns: var(--sidebar-width) 1fr;
+  /* minmax(0, 1fr), not 1fr: a bare 1fr track grows to fit wide tables and pushes the page past the viewport. */
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
   min-height: 100vh;
   transition: grid-template-columns var(--transition-base);
 }
 .app-shell.sidebar-collapsed {
-  grid-template-columns: var(--sidebar-width-collapsed) 1fr;
+  grid-template-columns: var(--sidebar-width-collapsed) minmax(0, 1fr);
 }
 
 /* Sidebar sticks while the document scrolls: one scrollbar, no nested scrolling. */
@@ -257,7 +272,8 @@ Global (unscoped) so the grid applies to the root.
 .topbar {
   position: sticky;
   top: 0;
-  z-index: 40;
+  /* Must exceed any sticky bar below it (e.g. a filter bar), or the dropdowns inside it render underneath. */
+  z-index: 100;
   height: var(--topbar-height);
   display: flex;
   align-items: center;
@@ -285,3 +301,10 @@ Global (unscoped) so the grid applies to the root.
 ```
 
 If a filter bar or other secondary bar was `position: sticky` under the old header, set its `top` to `var(--topbar-height)` so it docks under the new top bar.
+
+Shared rules for the narrower content area (the sidebar takes ~240px that tables used to have):
+
+```css
+.table-container { overflow-x: auto; }  /* wide tables scroll inside their card instead of squeezing */
+.badge, td.id, td.sku, td.date, td.num { white-space: nowrap; }  /* adapt the selectors to the app's class names */
+```

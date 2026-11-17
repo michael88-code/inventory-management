@@ -25,6 +25,8 @@ Before changing anything, build a picture of how the app is put together. Read r
 - **i18n**: if nav labels use `t('...')`, the sidebar must use the same keys. Never hard-code a label that was translated before.
 - **Styling approach**: plain CSS, SCSS, Tailwind, or a component library (Vuetify, PrimeVue, Element Plus, Naive UI). If a component library provides its own layout/drawer components, prefer configuring those over hand-building a parallel system - mixing two layout systems produces subtle spacing conflicts.
 
+- **Baseline**: start the app once before editing, take a "before" screenshot of the main view, and note any console errors already present. Without this baseline it's easy to blame the redesign for pre-existing errors, or to miss ones it introduced.
+
 Summarize what you found (routes, header contents, style location, constraints) to the user in a few lines before editing. It catches misreadings early and costs little.
 
 ### 2. Establish design tokens
@@ -55,10 +57,12 @@ Remove the old header markup and its now-dead CSS. Leftover `.top-nav` rules are
 
 This is what makes the result look designed rather than reskinned. For each view:
 
-- Give every page the same header pattern: title (and optional subtitle/actions) with the same size, weight and bottom margin. If the top bar already shows the page title, avoid a duplicate large heading; keep in-page headings for sections.
+- **Find the outliers first.** Views often carry their own scoped copies of shared patterns that drift from the global ones. Grep the `<style scoped>` blocks for `.card`, `.stat-card`, `.kpi`, `table`, `th`, `border-radius:`, `box-shadow:` and raw `px`/`rem` paddings, and compare them against the global versions. Those are the files to fix.
+- **Page titles**: the top bar now shows the page title, so a big in-page heading with the same text duplicates it. If a view's header holds only the title, hide that heading visually but keep it for screen readers (a `.visually-hidden` utility, or `.page-header h2:only-child`). If the header also has a description or actions, keep it but shrink the heading to `--text-lg`. Section headings inside the page stay as they are.
 - Normalize card/panel styling to the tokens: one background, one border, one radius, one shadow, one inner padding.
 - Replace hard-coded spacing (`margin: 18px`, `padding: 1.3rem`) with the nearest token. Use the same gap between cards in every grid.
 - Tables: consistent header style (small uppercase or medium-weight muted text), row height, cell padding, and a subtle row hover.
+- **Content just got ~240px narrower.** Tables that fit under a top nav will now squeeze, wrapping IDs, SKUs, dates and status badges onto two lines, which looks broken. Give badges, IDs, codes, dates and number cells `white-space: nowrap`, and wrap tables in a container with `overflow-x: auto`, so a wide table scrolls inside its card instead of squashing cells. Check the widest table with the sidebar expanded, not just collapsed.
 - Buttons, inputs and selects: one height, one radius, one focus ring.
 
 Prefer editing shared/global classes over touching each view when the views already share class names. Only touch scoped styles where a view diverges. Keep diffs focused on styling and layout. Don't refactor script logic in the same change, because it makes regressions hard to spot.
@@ -67,13 +71,24 @@ Read `references/design-tokens.md` → "Polish checklist" for the details that s
 
 ### 5. Verify in the browser
 
-Run the app (use the project's documented start command or start skill) and check it, ideally with a browser automation tool and screenshots:
+Run the app (use the project's documented start command or start skill) and check it, ideally with a browser automation tool and screenshots.
+
+On data-heavy apps, every click through a browser tool can return a huge page snapshot. It's much cheaper to script most checks in one in-page JavaScript evaluation: loop over the nav links and read the active item and title, toggle collapse, measure overflow. Keep screenshots for the visual comparison. When scripting clicks, note that some menus listen on `mousedown` rather than `click`, so dispatch the event the component actually listens for. Take a fresh snapshot or use CSS selectors after a full-page screenshot, because element refs from before it can be stale.
+
+Check:
 
 1. Every route is reachable from the sidebar and shows the correct active state, including `/`.
 2. Collapse and expand work, the state survives a reload, and the collapsed rail shows tooltips/labels on hover.
 3. Utilities moved to the top bar still work (open the profile menu, switch language and confirm the sidebar labels change too, open any modals).
 4. Global filters still apply to the data.
-5. At ~1440px and ~800px widths nothing overflows horizontally and the content isn't cramped.
+5. At ~1440px and ~800px widths, on every route, nothing overflows horizontally and no table cells or badges wrap awkwardly. To find what overflows, run this in the page:
+   ```js
+   [...document.querySelectorAll('body *')]
+     .filter(el => el.getBoundingClientRect().right > document.documentElement.clientWidth + 1)
+     .map(el => `${el.tagName.toLowerCase()}.${[...el.classList].join('.')} ${Math.round(el.getBoundingClientRect().right)}px`)
+     .slice(0, 15)
+   ```
+   An open dropdown should sit on top: `document.elementFromPoint(x, y)` at a point inside it returns the dropdown, not the bar beneath.
 6. The browser console shows no new errors or Vue warnings.
 7. Run the project's existing frontend tests if any exist.
 
@@ -85,5 +100,7 @@ Take before/after screenshots of at least the main dashboard view and show them 
 - **Double scrollbars**: let the main column scroll (`overflow-y: auto` on the main area with the shell at `height: 100vh`), or let the document scroll with a `position: sticky` sidebar, but not both.
 - **Sticky elements misaligned**: elements that used `position: sticky; top: 70px` relative to the old header need their offset updated to the new top bar height (use `var(--topbar-height)`).
 - **Dropdowns clipped**: profile/language menus that were positioned relative to the old header can be clipped by `overflow: hidden` on the new top bar. Don't put `overflow: hidden` on containers that host dropdowns.
+- **Dropdowns under the filter bar**: a sticky top bar creates its own stacking context, so a dropdown inside it can never rise above a sibling with a higher z-index, whatever z-index the dropdown itself has. Give the top bar a higher `z-index` than any sticky bar below it (check the existing values; filter bars often already use something like 90).
+- **Page wider than the window**: a plain `1fr` grid track grows to fit wide content (tables, charts, long numbers) instead of shrinking. Use `minmax(0, 1fr)` for the main column and for view grids such as `repeat(2, minmax(0, 1fr))`, plus `min-width: 0` on flex children that hold tables.
 - **Lost translations**: sidebar labels hard-coded in English when the old nav used `t()`.
 - **Text flash on collapse**: hide labels with opacity + width transitions, or `v-show`, rather than `v-if`, so items don't jump.
